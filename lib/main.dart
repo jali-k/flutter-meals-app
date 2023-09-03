@@ -16,15 +16,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              brightness: Brightness.dark,
-              seedColor: const Color.fromARGB(255, 131, 57, 0),
-            ),
-            useMaterial3: true,
-            textTheme: GoogleFonts.latoTextTheme()),
-        home: MealsScreen(title: "Some meal", meals: dummyMeals));
+      title: 'Flutter Demo',
+      theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            brightness: Brightness.dark,
+            seedColor: const Color.fromARGB(255, 131, 57, 0),
+          ),
+          useMaterial3: true,
+          textTheme: GoogleFonts.latoTextTheme()),
+      home: const CategoriesScreen(),
+    );
     // Generally this home needs to be changed to CategoriesScreen.dart
   }
 }

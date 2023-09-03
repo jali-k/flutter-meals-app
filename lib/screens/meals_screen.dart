@@ -9,7 +9,7 @@ class MealsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget bodyContent = Column(
+    Widget bodyContent = const Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text("No meals here"),
