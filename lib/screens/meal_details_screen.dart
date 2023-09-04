@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/models/Meal.dart';
 
-class MealDetailScreen extends StatefulWidget {
-  const MealDetailScreen({super.key, required this.meal});
+class MealDetailScreen extends StatelessWidget {
+  const MealDetailScreen(
+      {super.key, required this.meal, required this.onToggleFavourites});
 
   final Meal meal;
+  final void Function(Meal meal) onToggleFavourites;
 
-  @override
-  State<MealDetailScreen> createState() => _MealDetailScreenState();
-}
-
-class _MealDetailScreenState extends State<MealDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.meal.title),
+          title: Text(meal.title),
+          actions: [
+            IconButton(
+              onPressed: () {
+                onToggleFavourites(meal);
+              },
+              icon: const Icon(Icons.star),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
               Image.network(
-                widget.meal.imageUrl,
+                meal.imageUrl,
                 height: 300,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -38,7 +43,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
               const SizedBox(
                 height: 10,
               ),
-              for (var ingradient in widget.meal.ingredients)
+              for (var ingradient in meal.ingredients)
                 Text(
                   ingradient,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -57,7 +62,7 @@ class _MealDetailScreenState extends State<MealDetailScreen> {
               const SizedBox(
                 height: 10,
               ),
-              for (var step in widget.meal.steps)
+              for (var step in meal.steps)
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
