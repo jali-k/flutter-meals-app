@@ -49,14 +49,15 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
 // Navigation with the side drawer
-  void _onSelectDrawerItem(String identifier) {
+  void _onSelectDrawerItem(String identifier) async {
     Navigator.of(context).pop();
     if (identifier == 'filters') {
-      Navigator.of(context).push(
+      final filterValues = await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (ctx) => FiltersScreen(),
         ),
       );
+      print(filterValues);
     }
   }
 
