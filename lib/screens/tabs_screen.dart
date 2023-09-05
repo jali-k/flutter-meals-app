@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/models/Meal.dart';
 import 'package:meals_app/screens/categories_screen.dart';
+import 'package:meals_app/screens/filters_screen.dart';
 import 'package:meals_app/screens/meals_screen.dart';
+import 'package:meals_app/widgets/main_drawer.dart';
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -46,8 +48,21 @@ class _TabsScreenState extends State<TabsScreen> {
     });
   }
 
+// Navigation with the side drawer
+  void _onSelectDrawerItem(String identifier) {
+    Navigator.of(context).pop();
+    if (identifier == 'filters') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => FiltersScreen(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Handle the Tab bar behaviour
     if (selectedIndex == 0) {
       activeScren = CategoriesScreen(
         onToggleFavourites: _onToggleFavouriteMeals,
@@ -64,6 +79,7 @@ class _TabsScreenState extends State<TabsScreen> {
       appBar: AppBar(
         title: Text(title),
       ),
+      drawer: MainDrawer(onselectDrawerItem: _onSelectDrawerItem),
       body: activeScren,
       bottomNavigationBar: BottomNavigationBar(
         onTap: onSelectIndex,
