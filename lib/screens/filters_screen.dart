@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/screens/tabs_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals_app/providers/filter_provider.dart';
 
-enum Filter { gluteinFree, lactoseFree, vegetarian, vegan }
-
-class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({Key? key, required this.selectedFilters})
-      : super(key: key);
-
-  final Map<Filter, bool> selectedFilters;
+class FiltersScreen extends ConsumerStatefulWidget {
+  const FiltersScreen({Key? key}) : super(key: key);
 
   @override
-  State<FiltersScreen> createState() {
+  ConsumerState<FiltersScreen> createState() {
     return _FiltersScreenState();
   }
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   var _setGlutienFree =
       false; // widget key word is not available here where you initialize the state variables. It is available in the build method and also in "InitState()"
   var _setLactoseFree = false;
@@ -24,10 +20,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   @override
   void initState() {
-    _setGlutienFree = widget.selectedFilters[Filter.gluteinFree]!;
-    _setLactoseFree = widget.selectedFilters[Filter.lactoseFree]!;
-    _setVegetarian = widget.selectedFilters[Filter.vegetarian]!;
-    _setVegan = widget.selectedFilters[Filter.vegan]!;
+    final activeFilters = ref.read(filtersProvider);
+    _setGlutienFree = activeFilters[Filter.gluteinFree]!;
+    _setLactoseFree = activeFilters[Filter.lactoseFree]!;
+    _setVegetarian = activeFilters[Filter.vegetarian]!;
+    _setVegan = activeFilters[Filter.vegan]!;
     super.initState();
   }
 
@@ -36,13 +33,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
     // TODO: implement build
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pop({
+        ref.watch(filtersProvider.notifier).updateFilters({
           Filter.gluteinFree: _setGlutienFree,
           Filter.lactoseFree: _setLactoseFree,
           Filter.vegetarian: _setVegetarian,
           Filter.vegan: _setVegan,
         });
-        return false;
+        return true;
       },
       child: Scaffold(
         appBar: AppBar(
