@@ -6,7 +6,7 @@ class FavouriteMealsNotifier extends StateNotifier<List<Meal>> {
       : super(
             []); // We here pass the initial value for the provider "the initial favourite meals". This should not be changed and we need to replase it in a change.
 
-  void _toggleFavouriteMeals(Meal meal) {
+  bool toggleFavouriteMeals(Meal meal) {
     final _isMealFavourite = state.contains(
         meal); // Here the state is the obj to access the initial list or the list that the current provider has. (Like widget keyword in statefull classes)
     if (_isMealFavourite) {
@@ -14,9 +14,11 @@ class FavouriteMealsNotifier extends StateNotifier<List<Meal>> {
       state = state
           .where((m) => m.id != meal.id)
           .toList(); // We return all meals without the one we received, creating a new list.
+      return false;
     } else {
       // Here we need to add the meal. Also we need to replace the existing list.
       state = [...state, meal];
+      return true;
     }
   }
 }

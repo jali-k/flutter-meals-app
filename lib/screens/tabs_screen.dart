@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meals_app/models/Meal.dart';
+import 'package:meals_app/models/meal.dart';
+import 'package:meals_app/providers/favourite_provider.dart';
+
 import 'package:meals_app/providers/meals_provider.dart';
 import 'package:meals_app/screens/categories_screen.dart';
 import 'package:meals_app/screens/filters_screen.dart';
@@ -28,28 +30,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   List<Meal> favouriteMeals = [];
 
-  void showSnackBarMessage(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
-  void _onToggleFavouriteMeals(Meal meal) {
-    if (favouriteMeals.contains(meal)) {
-      setState(() {
-        favouriteMeals.remove(meal);
-      });
-      showSnackBarMessage("Meal is remove from favourites");
-    } else {
-      setState(() {
-        favouriteMeals.add(meal);
-      });
-      showSnackBarMessage("Meal added as a favourite");
-    }
-  }
+  void showSnackBarMessage(String message) {}
 
   void onSelectIndex(int index) {
     setState(() {
@@ -78,16 +59,16 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
     List<Meal> filteredMeals = meals.where(
       (meal) {
-        if (!meal.isGlutenFree && _selectedFilters[Filter.gluteinFree]!) {
+        if (_selectedFilters[Filter.gluteinFree]! && !meal.isGlutenFree) {
           return false;
         }
-        if (!meal.isLactoseFree && _selectedFilters[Filter.lactoseFree]!) {
+        if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
           return false;
         }
-        if (!meal.isVegetarian && _selectedFilters[Filter.vegetarian]!) {
+        if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
           return false;
         }
-        if (!meal.isVegan && _selectedFilters[Filter.vegan]!) {
+        if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
           return false;
         }
         return true;
@@ -96,14 +77,11 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
     // Handle the Tab bar behaviour
     if (selectedIndex == 0) {
-      activeScren = CategoriesScreen(
-          onToggleFavourites: _onToggleFavouriteMeals,
-          availableMeals: filteredMeals);
+      activeScren = CategoriesScreen(availableMeals: filteredMeals);
     } else {
       title = "Your Favourites";
       activeScren = MealsScreen(
-        meals: favouriteMeals,
-        onToggleFavourites: _onToggleFavouriteMeals,
+        meals: ref.watch(favouriteMealsProvider),
       );
     }
 
