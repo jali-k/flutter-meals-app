@@ -4,7 +4,10 @@ import 'package:meals_app/screens/tabs_screen.dart';
 enum Filter { gluteinFree, lactoseFree, vegetarian, vegan }
 
 class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({Key? key}) : super(key: key);
+  const FiltersScreen({Key? key, required this.selectedFilters})
+      : super(key: key);
+
+  final Map<Filter, bool> selectedFilters;
 
   @override
   State<FiltersScreen> createState() {
@@ -13,10 +16,21 @@ class FiltersScreen extends StatefulWidget {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  var _setGlutienFree = false;
+  var _setGlutienFree =
+      false; // widget key word is not available here where you initialize the state variables. It is available in the build method and also in "InitState()"
   var _setLactoseFree = false;
   var _setVegetarian = false;
   var _setVegan = false;
+
+  @override
+  void initState() {
+    _setGlutienFree = widget.selectedFilters[Filter.gluteinFree]!;
+    _setLactoseFree = widget.selectedFilters[Filter.lactoseFree]!;
+    _setVegetarian = widget.selectedFilters[Filter.vegetarian]!;
+    _setVegan = widget.selectedFilters[Filter.vegan]!;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

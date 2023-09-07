@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/data/dummy_data.dart';
 import 'package:meals_app/models/Meal.dart';
 import 'package:meals_app/screens/categories_screen.dart';
 import 'package:meals_app/screens/filters_screen.dart';
@@ -16,6 +17,13 @@ class _TabsScreenState extends State<TabsScreen> {
   int selectedIndex = 0;
   Widget? activeScren;
   String title = "Select Your Category";
+
+  Map<Filter, bool> _selectedFilters = {
+    Filter.gluteinFree: false,
+    Filter.lactoseFree: false,
+    Filter.vegetarian: false,
+    Filter.vegan: false,
+  };
 
   List<Meal> favouriteMeals = [];
 
@@ -52,22 +60,42 @@ class _TabsScreenState extends State<TabsScreen> {
   void _onSelectDrawerItem(String identifier) async {
     Navigator.of(context).pop();
     if (identifier == 'filters') {
-      final filterValues = await Navigator.of(context).push(
+      final filterValues = await Navigator.of(context).push<Map<Filter, bool>>(
         MaterialPageRoute(
-          builder: (ctx) => FiltersScreen(),
+          builder: (ctx) => FiltersScreen(selectedFilters: _selectedFilters),
         ),
       );
-      print(filterValues);
+      setState(() {
+        _selectedFilters = filterValues!;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Meal> filteredMeals = dummyMeals.where(
+      (meal) {
+        if (!meal.isGlutenFree && _selectedFilters[Filter.gluteinFree]!) {
+          return false;
+        }
+        if (!meal.isLactoseFree && _selectedFilters[Filter.lactoseFree]!) {
+          return false;
+        }
+        if (!meal.isVegetarian && _selectedFilters[Filter.vegetarian]!) {
+          return false;
+        }
+        if (!meal.isVegan && _selectedFilters[Filter.vegan]!) {
+          return false;
+        }
+        return true;
+      },
+    ).toList();
+
     // Handle the Tab bar behaviour
     if (selectedIndex == 0) {
       activeScren = CategoriesScreen(
-        onToggleFavourites: _onToggleFavouriteMeals,
-      );
+          onToggleFavourites: _onToggleFavouriteMeals,
+          availableMeals: filteredMeals);
     } else {
       title = "Your Favourites";
       activeScren = MealsScreen(
