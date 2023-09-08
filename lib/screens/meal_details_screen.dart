@@ -12,6 +12,10 @@ class MealDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // The ref obj should be passed like this since this is not a statefull widget.
 
+    final favouriteMeals = ref.watch(favouriteMealsProvider);
+
+    final isFavourite = favouriteMeals.contains(meal);
+
     return Scaffold(
         appBar: AppBar(
           title: Text(meal.title),
@@ -32,7 +36,7 @@ class MealDetailScreen extends ConsumerWidget {
                   ),
                 );
               },
-              icon: const Icon(Icons.star),
+              icon: Icon(isFavourite ? Icons.star : Icons.star_outline),
             ),
           ],
         ),
