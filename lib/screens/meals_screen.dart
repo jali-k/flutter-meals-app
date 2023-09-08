@@ -27,10 +27,15 @@ class MealsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget bodyContent = const Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("No meals here"),
-        Text("Try selecting a deferent category")
+        Center(
+            child: Text(
+          "No meals to show",
+          style: TextStyle(
+              color: Colors.white, fontSize: 22, fontWeight: FontWeight.w100),
+        )),
       ],
     );
 
